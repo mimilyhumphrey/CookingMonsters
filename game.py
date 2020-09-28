@@ -76,7 +76,7 @@ def enter_contest(skill):
         print("Loser!")
         return -1
 
-
+#comment
 
 
 
