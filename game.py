@@ -1,11 +1,22 @@
 import os
 import random
 
+ALL_SKILLS = [
+    "Asian Cooking",
+    "French Baking",
+    "Mediteranian cooking",
+    "Latin American cooking"
+]
 
 def main():
-    player_reputation = 2
-    player_skill = 0 
-    player_name = input("What is your monster's name? ")
+    new_name = input("What is your monster's name? ")
+    player = {'reputation': 2,
+    'exp': 0,
+    'name': new_name,
+    'skills': [],
+    }
+
+    
     os.system('clear')
     should_continue = True
     while should_continue:
@@ -15,20 +26,22 @@ def main():
             "View profile",
             "Exit"
         ]
-        print("Hello {}! What would you like to do today? ".format(player_name))
+        print("Hello {}! What would you like to do today? ".format(player['name']))
         answer = choose(choices)
         if answer == 0:
             increase = perform_training()
-            player_skill += increase
+            player['exp'] += increase
         if answer == 1:
-            increase = enter_contest(player_skill)
-            player_reputation += increase
-            if player_reputation == 0:
+            increase = enter_contest(player)
+            player['reputation'] += increase
+            if player['reputation'] == 0:
                 print("Your reputation is 0. You lose the game!")
                 break
         if answer == 2:
-            print("Skill: {}".format(player_skill))
-            print("Reputation: {}".format(player_reputation))
+            print("Exp: {}".format(player['exp']))
+            print("Reputation: {}".format(player['reputation']))
+            print("Skills:")
+            print_ordered_choices(player['skills'])
         if answer == 3:
             should_continue = False
             break
@@ -61,14 +74,16 @@ def get_valid_choice(choices):
 
 
 def perform_training():
+    new_skill = random.choice(ALL_SKILLS)
+    player['skills'].append(new_skill)
     increase = 10
-    print('Yay you trained hard!  You gained {} skill points'.format(increase))
+    print('Yay you trained hard!  You gained {} exp points and learned {}'.format(increase, new_skill))
     return increase
 
 
-def enter_contest(skill):
+def enter_contest(player):
     rand = random.randint(0, 100)
-    result = rand + skill
+    result = rand + player['exp']
     if result > 50:
         print("You win!")
         return 1
