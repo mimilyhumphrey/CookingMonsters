@@ -77,5 +77,5 @@ def enter_contest(skill):
         return -1
 
 
-#comment
+
 main()
