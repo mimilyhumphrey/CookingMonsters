@@ -5,21 +5,21 @@ import random
 ALL_SKILLS = [
     "Asian Cooking",
     "French Baking",
-    "Mediteranian cooking",
+    "Mediterranean cooking",
     "Latin American cooking"
 ]
 class Player:
-    def __init__(self, money, reputation, exp, name, skills):
-        self.money = money
-        self.reputation = reputation
-        self.exp = exp
+    def __init__(self, name):
+        self.money = 500
+        self.reputation = 2
+        self.exp = 0
         self.name = name
-        self.skills = skills
+        self.skills = {}
 
 def main():
     new_name = input("What is your monster's name? ")
     new_name = new_name.capitalize()
-    player = Player(500, 2, 0, new_name, [])
+    player = Player(new_name)
     
     os.system('clear')
     should_continue = True
@@ -86,7 +86,15 @@ def perform_training(player):
     player.money -= 50 
     print('It costs 50 for training')
     new_skill = random.choice(ALL_SKILLS)
-    player.skills.append(new_skill)
+    #player.skills.append(new_skill)
+    #check if player has new skill
+    #if yes then increase level by 1
+    #if no then add a new skill to key and value 1
+    # { 'french_cooking': 1 }
+    if new_skill in player.skills:
+        player.skills[new_skill] += 1
+    else:
+        player.skills[new_skill] = 1
     increase = 10
     print('Yay you trained hard!  You gained {} exp points and learned {}'.format(increase, new_skill))
     return increase
@@ -94,9 +102,26 @@ def perform_training(player):
 
 def enter_contest(player):
     player.money -= 100
+
+    """
+pick a theme for the contest
+use randomly choose a theme
+check if the player has the skill in the theme
+if yes give them extra 10 *10 (skill bonus = skill level *10)
+add skill bonus to result 115
+print (you receive extra bonus since you haave ..skill)
+    """
+    
     print("It costs 100 for entry fee")
+    rand_theme = random.choice(ALL_SKILLS)
+    if rand_theme in player.skills:
+        skill_bonus = player.skills[rand_theme]*10
+        print("You receive {} extra bonus since you have the {} skill".format(skill_bonus, rand_theme))   
+    else:
+        skill_bonus = 0
     rand = random.randint(0, 100)
-    result = rand + player.exp
+    result = rand + player.exp + skill_bonus
+    
     if result > 50:
         player.money += 200
         print("You win! Congrats you got 200!")
@@ -112,7 +137,7 @@ def show_profile(player):
     print("Exp: {}".format(player.exp))
     print("Reputation: {}".format(player.reputation))
     print("Skills:")
-    print_ordered_choices(player.skills)
+    print_skills(player)
 
 def show_emotions(emotion, player):
     if emotion == "happy":
@@ -120,6 +145,8 @@ def show_emotions(emotion, player):
     if emotion == "sad":
         print("{} pouts and gazes down!".format(player.name))
 
-
+def print_skills(player):
+    for skill, level in player.skills.items():
+        print("{}: {}".format(skill, level))
 
 main()
